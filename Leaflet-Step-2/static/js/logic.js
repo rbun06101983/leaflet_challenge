@@ -34,9 +34,9 @@ d3.json(queryURL, (data)=>{
         
         for (var k=0; k< fData.features.length; k++){
             faultlineMarkers.push(
-                L.polyline(fdata.features[k].geometry.coordinates, {color:'#FF8C00'})
+                L.polyline(fData.features[k].geometry.coordinates, {color:'#FF8C00'})
                 );
-            console.log(fdata.features[k].geometry);
+            console.log(fData.features[k].geometry);
             }
     })    
 })
@@ -51,5 +51,67 @@ var satellite=L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{
     tileSize:512,
     maxZoom:5,
     zoomOffset:-1,
-    id:"mapbox/streets-v11",
+    id:"mapbox.satellite",
     accessToken: API_KEY
+});
+
+var greyscale=L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize:512,
+    maxZoom:5,
+    zoomOffset:-1,
+    id:"mapbox.light",
+    accessToken: API_KEY
+});
+
+var outdoors=L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize:512,
+    maxZoom:5,
+    zoomOffset:-1,
+    id:"mapbox.outdoors",
+    accessToken: API_KEY
+});
+
+var baseMaps={
+    Satellite: satellite,
+    Greyscale: greyscale,
+    Outdoors: outdoors
+    };
+
+    //Overlays that may toggle on or off
+    var overlayMaps={
+        Earthquake: earthquakeLayer,
+        FaultlineLayer: faultlineLayer
+    };
+
+//creating a map object
+var myMap=L.map('map',{
+    center:[39.50,-98.35],
+    zoom:3,
+    layers:[satellite, earthquakeLayer, faultlineLayer]
+});
+
+var legend=L.control({position:'bottomright'});
+
+legend.onAdd=function(map){
+
+    var div=L.DomUtil.create('div', 'info legend'),
+        grades=[0,1,2,3,4,5],
+        labels=[];
+
+        for (var i=0; i<grades.length; i++){
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i]+1)+ '"></i>'+
+                grades[i]+(grades[i+1]?'&ndash;' +grades[i+1] + '<br>' : '+'); 
+        }
+
+        return div;
+};
+
+legend.addTo(myMap);
+
+//Pass map layers into our layer control
+L.control.layers(baseMaps, overlayMaps,{
+    collapsed:false
+}).addTo(myMap);
