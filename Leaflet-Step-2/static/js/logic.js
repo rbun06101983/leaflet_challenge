@@ -38,8 +38,6 @@ d3.json(queryURL, (data)=>{
                 );
             console.log(fData.features[k].geometry);
             }
-    })    
-})
 
 //Add the cityMarkers to a new layer group
 var earthquakeLayer=L.layerGroup(earthquakeMarkers);
@@ -51,7 +49,7 @@ var satellite=L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{
     tileSize:512,
     maxZoom:5,
     zoomOffset:-1,
-    id:"mapbox.satellite",
+    id:"mapbox/satellite-v9",
     accessToken: API_KEY
 });
 
@@ -60,7 +58,7 @@ var greyscale=L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{
     tileSize:512,
     maxZoom:5,
     zoomOffset:-1,
-    id:"mapbox.light",
+    id:"mapbox/light-v10",
     accessToken: API_KEY
 });
 
@@ -69,7 +67,7 @@ var outdoors=L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y
     tileSize:512,
     maxZoom:5,
     zoomOffset:-1,
-    id:"mapbox.outdoors",
+    id:"mapbox/outdoors-v11",
     accessToken: API_KEY
 });
 
@@ -115,3 +113,5 @@ legend.addTo(myMap);
 L.control.layers(baseMaps, overlayMaps,{
     collapsed:false
 }).addTo(myMap);
+});
+});
